@@ -10,6 +10,7 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+import re
 
 
 class HBNBCommand(cmd.Cmd):
@@ -73,7 +74,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] is '{' and pline[-1] is '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -115,15 +116,48 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
+        classes = ["BaseModel", "User", "State",
+                   "City", "Amenity", "Place", "Review"]
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+        args = args.strip()
+        list_ = args.split(" ")
+        list_attribute = list_[1:]
+        class_name = list_[0]
+        if (class_name in classes):
+            cls_object = globals()[class_name]
+            new_obj_in = cls_object()
+        else:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
+        attribute_name_char = r'(\w+)(?=\=)'
+        attribute_value_quote = r'(?<=")(.*?)(?=")'
+        attribute_value_non_quote = r'(?<=\=)([\w.-]+)(?=\s|$)'
+        for attribute in list_attribute:
+            name_matched = re.search(attribute_name_char, attribute)
+            if name_matched:
+                attribute_name = name_matched.group(1)
+                if "'" in attribute or '"' in attribute:
+                    value_matched = re.search(attribute_value_quote, attribute)
+                else:
+                    value_matched = re.search(attribute_value_non_quote,
+                                              attribute)
+                if value_matched:
+                    attribute_value = value_matched.group(1)
+                    if (hasattr(new_obj_in, attribute_name)):
+                        if type(getattr(new_obj_in, attribute_name)) is float:
+                            attribute_value = float(attribute_value)
+                        elif type(getattr(new_obj_in, attribute_name)) is int:
+                            attribute_value = int(attribute_value)
+                        elif type(getattr(new_obj_in, attribute_name)) is str:
+                            if '_' in attribute_value:
+                                attribute_value = attribute_value.\
+                                                  replace('_', ' ')
+                    setattr(new_obj_in, attribute_name, attribute_value)
+
         storage.save()
-        print(new_instance.id)
+        print(new_obj_in.id)
         storage.save()
 
     def help_create(self):
@@ -187,7 +221,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[key])
+            del (storage.all()[key])
             storage.save()
         except KeyError:
             print("** no instance found **")
@@ -319,6 +353,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
