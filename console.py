@@ -158,7 +158,6 @@ class HBNBCommand(cmd.Cmd):
 
         print("{}".format(new_obj_in.id))
         storage.new(new_obj_in)  # Add the new object to storage
-        new_obj_in.save()
 
     def help_create(self):
         """ Help information for the create method """
