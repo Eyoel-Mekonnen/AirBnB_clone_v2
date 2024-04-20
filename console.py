@@ -157,6 +157,7 @@ class HBNBCommand(cmd.Cmd):
                     setattr(new_obj_in, attribute_name, attribute_value)
 
         print("{}".format(new_obj_in.id))
+        storage.new(new_obj_in)  # Add the new object to storage
         new_obj_in.save()
 
     def help_create(self):
