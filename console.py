@@ -156,7 +156,7 @@ class HBNBCommand(cmd.Cmd):
                                 attribute_value = attribute_value.\
                                                   replace('_', ' ')
                     setattr(new_obj_in, attribute_name, attribute_value)
-
+        print("{}".format(new_obj_in.id))
         storage.new(new_obj_in)
         new_obj_in.save()
 
