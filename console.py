@@ -128,7 +128,6 @@ class HBNBCommand(cmd.Cmd):
         if (class_name in classes):
             cls_object = globals()[class_name]
             new_obj_in = cls_object()
-            new_obj_in.save()
         else:
             print("** class doesn't exist **")
             return
@@ -158,7 +157,7 @@ class HBNBCommand(cmd.Cmd):
                     setattr(new_obj_in, attribute_name, attribute_value)
 
         print("{}".format(new_obj_in.id))
-        storage.save()
+        new_obj_in.save()
 
     def help_create(self):
         """ Help information for the create method """
