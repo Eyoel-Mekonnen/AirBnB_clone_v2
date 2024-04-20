@@ -157,6 +157,7 @@ class HBNBCommand(cmd.Cmd):
                                                   replace('_', ' ')
                     setattr(new_obj_in, attribute_name, attribute_value)
         storage.new(new_obj_in)
+        print(new_obj_in.id)
         new_obj_in.save()
 
     def help_create(self):
@@ -208,7 +209,6 @@ class HBNBCommand(cmd.Cmd):
         if not c_name:
             print("** class name missing **")
             return
-:q
 
         if c_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
