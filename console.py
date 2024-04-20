@@ -126,7 +126,7 @@ class HBNBCommand(cmd.Cmd):
         list_attribute = list_[1:]
         class_name = list_[0]
         if (class_name in classes):
-            cls_object = globals()[class_name]
+            cls_object = globals()[class_name]()
             new_obj_in = cls_object()
         else:
             print("** class doesn't exist **")
