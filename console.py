@@ -11,6 +11,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 import re
+import shlex
 
 
 class HBNBCommand(cmd.Cmd):
@@ -122,7 +123,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
         args = args.strip()
-        list_ = args.split(" ")
+        list_ = shlex.split(args)
         list_attribute = list_[1:]
         class_name = list_[0]
         if (class_name in classes):
