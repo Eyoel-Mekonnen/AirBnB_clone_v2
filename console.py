@@ -210,6 +210,7 @@ class HBNBCommand(cmd.Cmd):
         if not c_name:
             print("** class name missing **")
             return
+:q
 
         if c_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
