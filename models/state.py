@@ -3,15 +3,18 @@
 from models.base_model import BaseModel
 from models.base_model import Base
 from sqlalchemy.orm import relationship
-from sqlalchemy import String, Column
-
+from sqlalchemy import String, Column, Integer
+from os import getenv
+import models
+from models.city import City
+from sqlalchemy.ext.declarative import declarative_base
 
 class State(BaseModel, Base):
     """ State class """
     __tablename__ = 'states'
-    name = Column(String, nullable=False)
+    name = Column(String(128), nullable=False)
     cities_ = relationship("City", back_populates="state", cascade="delete")
-
+    
     @property
     def cities(self):
         """Return list of city where state_id current state_id"""

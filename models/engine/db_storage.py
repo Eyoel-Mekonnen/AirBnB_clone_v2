@@ -11,6 +11,7 @@ from models.place import Place
 from models.review import Review
 from models.amenity import Amenity
 from sqlalchemy.orm import sessionmaker, scoped_session, relationship
+from sqlalchemy.orm.session import object_session
 
 
 class DBStorage:
@@ -51,6 +52,8 @@ class DBStorage:
 
     def new(self, obj):
         """Add the object to current database session."""
+        if object_session(obj) and object_session(obj) != self.__session:
+            self.__session.add(obj)
         self.__session.add(obj)
 
     def save(self):
@@ -65,5 +68,6 @@ class DBStorage:
     def reload(self):
         """ Create Tables in the database create database session."""
         Base.metadata.create_all(self.__engine)
-        Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        self.__session = scoped_session(Session)
+        session_fact = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(session_fact)
+        self.__session = Session()
