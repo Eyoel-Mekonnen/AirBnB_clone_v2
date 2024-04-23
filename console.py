@@ -241,7 +241,10 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         objects_ = storage.all(class_name)
-        list_instances = [str(value) for value in objects_.values()]
+        list_instances = []
+        for value in objects_.values():
+            formatted_str = str(value)
+            list_instances.append(formatted_str)
         output_str = ", ".join(list_instances)
         print("[" + output_str + "]")
 
