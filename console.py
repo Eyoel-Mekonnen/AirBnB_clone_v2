@@ -152,8 +152,7 @@ class HBNBCommand(cmd.Cmd):
                         elif type(getattr(new_obj_in, attribute_name)) is int:
                             attribute_value = int(attribute_value)
                         elif type(getattr(new_obj_in, attribute_name)) is str:
-                            if '_' in attribute_value:
-                                attribute_value = attribute_value.\
+                            attribute_value = attribute_value.\
                                                   replace('_', ' ')
                     setattr(new_obj_in, attribute_name, attribute_value)
         new_obj_in.save()
