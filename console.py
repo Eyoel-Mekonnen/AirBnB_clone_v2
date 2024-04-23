@@ -236,22 +236,14 @@ class HBNBCommand(cmd.Cmd):
                            "Amenity", "Place", "Review"]
         line = line.strip()
         list_ = line.split(" ")
-        class_name = list_[0]
-        if line:
-            if (class_name not in list_of_classes):
-                print("** class doesn't exist **")
-                return
-            list_instances = []
-            objects_ = storage.all(class_name)
-            for key, value in objects_.items():
-                if (key.split(".")[0] == class_name):
-                    list_instances.append(str(value))
-        else:
-            list_instances = []
-            objects_ = storage.all()
-            for key, value in objects_.items():
-                list_instances.append(str(value))
-        print(list_instances)
+        class_name = list_[0] if list_ else None
+        if class_name and class_name not in list_of_classes:
+            print("** class doesn't exist **")
+            return
+        objects_ = storage.all(class_name)
+        list_instances = [str(value) for value in objects_.values()]
+        output_str = ", ".join(list_instances)
+        print("[" + output_str + "]")
 
     def help_all(self):
         """ Help information for the all command """

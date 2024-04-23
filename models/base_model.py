@@ -46,6 +46,8 @@ class BaseModel:
     
     def datetime_format(self, dt):
         """ Returns a formatted datetime string to match the expected output style. """
+        if dt is None:
+            return None
         return f"datetime.datetime({dt.year}, {dt.month}, {dt.day}, {dt.hour}, {dt.minute}, {dt.second})"
 
     def to_dict(self):
