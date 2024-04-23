@@ -242,9 +242,7 @@ class HBNBCommand(cmd.Cmd):
             return
         objects_ = storage.all(class_name)
         list_instances = []
-        for value in objects_.values():
-            formatted_str = str(value)
-            list_instances.append(formatted_str)
+        list_instances = [str(value) for value in objects_.values()]
         output_str = ", ".join(list_instances)
         print("[" + output_str + "]")
 
