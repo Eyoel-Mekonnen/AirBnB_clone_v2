@@ -53,10 +53,7 @@ class BaseModel:
             if key == '_sa_instance_state':
                 continue
              
-            if isinstance(value, datetime):
-                dict_repr[key] = value.isoformat()
-            else:
-                dict_repr[key] = value
+            dict_repr[key] = value
         dict_repr['__class__'] = type(self).__name__
         return dict_repr
 
