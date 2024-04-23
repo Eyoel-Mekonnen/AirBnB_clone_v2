@@ -48,8 +48,9 @@ class BaseModel:
         """ Returns expected output style. """
         if dt is None:
             return None
-        return f"datetime.datetime({dt.year}, {dt.month}, {dt.day},
-                                   {dt.hour}, {dt.minute}, {dt.second})"
+        return ("datetime.datetime("
+                f"{dt.year}, {dt.month}, {dt.day},"
+                f"{dt.hour}, {dt.minute}, {dt.second})")
 
     def to_dict(self):
         """Convert instance into dict format"""
