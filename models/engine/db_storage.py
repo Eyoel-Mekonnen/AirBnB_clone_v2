@@ -32,22 +32,29 @@ class DBStorage:
 
     def all(self, cls=None):
         """Fetche Data from the tables."""
-        tables = [State, City, User, Place, Review, Amenity]
-        table_instances = []
+        class_map = {
+                     'State': State,
+                     'City': City,
+                     'User': User,
+                     'Place': Place,
+                     'Review': Review,
+                     'Amenity': Amenity
+        }
         dic_of_tables = {}
         if cls is None:
-            for table in tables:
-                table_instances.extend(self.__session.query(table).all())
-            for table in table_instances:
-                key = table.__class__.__name__ + "." + str(table.id)
-                dic_of_tables[key] = table
+            for cls_name, cls_obj in class_map.items():
+                table_instances = self.__session.query(cls_obj).all()
+                for instance in table_instances:
+                    key = cls_name + "." + str(instance.id)
+                    dic_of_tables[key] = instance
         else:
             if isinstance(cls, str):
-                cls = globals()[cls]
-            table_instance = self.__session.query(cls).all()
-            for table in table_instance:
-                key = table.__class__.__name__ + "." + str(table.id)
-                dic_of_tables[key] = table
+                cls = class_map.get(cls)
+            if cls:
+                table_instances = self.__session.query(cls).all()
+                for instance in table_instances:
+                    key = cls.__name__ + "." + str(instance.id)
+                    dic_of_tables[key] = instance
         return dic_of_tables
 
     def new(self, obj):
