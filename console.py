@@ -133,8 +133,8 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         attribute_name_char = r'(\w+)(?=\=)'
-        attribute_value_quote = r'(?<=")(.*?)(?=")'
-        attribute_value_non_quote = r'(?<=\=)([\w.-]+)(?=\s|$)'
+        attribute_value_quote = r'(?<=")(.+?)(?=")'
+        attribute_value_non_quote = r'(?<=\=)(.+?)(?=\s|$)'
         for attribute in list_attribute:
             name_matched = re.search(attribute_name_char, attribute)
             if name_matched:
@@ -152,11 +152,9 @@ class HBNBCommand(cmd.Cmd):
                         elif type(getattr(new_obj_in, attribute_name)) is int:
                             attribute_value = int(attribute_value)
                         elif type(getattr(new_obj_in, attribute_name)) is str:
-                            if '_' in attribute_value:
-                                attribute_value = attribute_value.\
+                            attribute_value = attribute_value.\
                                                   replace('_', ' ')
                     setattr(new_obj_in, attribute_name, attribute_value)
-        storage.new(new_obj_in)
         new_obj_in.save()
         print(new_obj_in.id)
 
@@ -231,23 +229,21 @@ class HBNBCommand(cmd.Cmd):
         print("Destroys an individual instance of a class")
         print("[Usage]: destroy <className> <objectId>\n")
 
-    def do_all(self, args):
-        """ Shows all objects, or all objects of a class"""
-        print_list = []
-
-        if args:
-            args = args.split(' ')[0]  # remove possible trailing args
-            if args not in HBNBCommand.classes:
-                print("** class doesn't exist **")
-                return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
-        else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
-
-        print(print_list)
+    def do_all(self, line):
+        """Prints all string representation based or not on the class name. """
+        list_of_classes = ["BaseModel", "User", "State", "City",
+                           "Amenity", "Place", "Review"]
+        line = line.strip()
+        list_ = line.split(" ")
+        class_name = list_[0] if list_ else None
+        if class_name and class_name not in list_of_classes:
+            print("** class doesn't exist **")
+            return
+        objects_ = storage.all(class_name)
+        list_instances = []
+        list_instances = [str(value) for value in objects_.values()]
+        output_str = ", ".join(list_instances)
+        print("[" + output_str + "]")
 
     def help_all(self):
         """ Help information for the all command """

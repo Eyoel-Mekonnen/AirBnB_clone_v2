@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """This module defines a base class for all models in our hbnb clone"""
+import models
 import uuid
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
@@ -32,27 +33,39 @@ class BaseModel:
 
     def __str__(self):
         """Returns a string representation of the instance"""
-        cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
+
+        dict_repr = self.to_dict()
+        dict_repr.pop('__class__', None)
+        return f"[{type(self).__name__}] ({self.id}) {dict_repr}"
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
-        from models import storage
         self.updated_at = datetime.now()
         models.storage.new(self)
-        modles.storage.save()
+        models.storage.save()
+
+    def datetime_format(self, dt):
+        """ Returns expected output style. """
+        if dt is None:
+            return None
+        return ("datetime.datetime("
+                f"{dt.year}, {dt.month}, {dt.day},"
+                f"{dt.hour}, {dt.minute}, {dt.second})")
 
     def to_dict(self):
         """Convert instance into dict format"""
-        dictionary = {}
-        dictionary.update(self.__dict__)
-        dictionary.update({'__class__':
-                          (str(type(self)).split('.')[-1]).split('\'')[0]})
-        if '_sa_instance_state' in dictionary:
-            del dictionary['_sa_instance_state']
-        dictionary['created_at'] = self.created_at.isoformat()
-        dictionary['updated_at'] = self.updated_at.isoformat()
-        return dictionary
+        """ class_name_ = self.__class__.__name__i"""
+        """dict_name = {"__class__": class_name_}"""
+        dict_repr = {}
+        for key, value in self.__dict__.items():
+            if key == '_sa_instance_state':
+                continue
+            if isinstance(value, datetime):
+                dict_repr[key] = self.datetime_format(value)
+            else:
+                dict_repr[key] = value
+        dict_repr['__class__'] = type(self).__name__
+        return dict_repr
 
     def delete(self):
         """Delete the current instance from the storage"""
