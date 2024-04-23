@@ -22,11 +22,11 @@ class FileStorage:
         else:
             if isinstance(cls, str):
                 cls = globals()[cls]
-        dict_of_objects = {}
-        for key, value in FileStorage.__objects.items():
-            if isinstance(value, cls):
-                dict_of_objects[key] = value
-        return dict_of_objects
+            dict_of_objects = {}
+            for key, value in FileStorage.__objects.items():
+                if isinstance(value, cls):
+                    dict_of_objects[key] = value
+            return dict_of_objects
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
