@@ -11,7 +11,6 @@ from models.place import Place
 from models.review import Review
 from models.amenity import Amenity
 from sqlalchemy.orm import sessionmaker, scoped_session, relationship
-from sqlalchemy.orm.session import object_session
 
 
 class DBStorage:
@@ -59,8 +58,6 @@ class DBStorage:
 
     def new(self, obj):
         """Add the object to current database session."""
-        if object_session(obj) and object_session(obj) != self.__session:
-            self.__session.add(obj)
         self.__session.add(obj)
 
     def save(self):
