@@ -33,11 +33,10 @@ class BaseModel:
 
     def __str__(self):
         """Returns a string representation of the instance"""
-        cls = (str(type(self)).split('.')[-1]).split("'")[0]
-        dictionary = self.to_dict()
-        if '_sa_instance_state' in dictionary:
-            del dictionary['_sa_instance_state']
-        return '[{}] ({}) {}'.format(cls, self.id, dictionary)
+
+        dict_repr = self.to_dict()
+        dict_repr.pop('__class__', None)
+        return f"[{type(self).__name__}] ({self.id}) {dict_repr}"
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
@@ -47,15 +46,15 @@ class BaseModel:
 
     def to_dict(self):
         """Convert instance into dict format"""
-        dictionary = {}
-        dictionary.update(self.__dict__)
-        dictionary.update({'__class__':
-                          (str(type(self)).split('.')[-1]).split('\'')[0]})
-        if '_sa_instance_state' in dictionary:
-            del dictionary['_sa_instance_state']
-        dictionary['created_at'] = self.created_at.isoformat()
-        dictionary['updated_at'] = self.updated_at.isoformat()
-        return dictionary
+        """ class_name_ = self.__class__.__name__i"""
+        """dict_name = {"__class__": class_name_}"""
+        dict_repr = {}
+        for key, value in self.__dict__.items():
+            if key == '_sa_instance_state':
+                continue
+            dict_repr[key] = value
+        dict_repr['__class__'] = type(self).__name__
+        return dict_repr
 
     def delete(self):
         """Delete the current instance from the storage"""

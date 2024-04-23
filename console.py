@@ -243,8 +243,9 @@ class HBNBCommand(cmd.Cmd):
                 return
             list_instances = []
             objects_ = storage.all(class_name)
-            for value in objects_.values():
-                list_instances.append(str(value))
+            for key, value in objects_.items():
+                if (key.split(".")[0] == class_name):
+                    list_instances.append(str(value))
         else:
             list_instances = []
             objects_ = storage.all()
