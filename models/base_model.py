@@ -43,6 +43,10 @@ class BaseModel:
         self.updated_at = datetime.now()
         models.storage.new(self)
         models.storage.save()
+    
+    def datetime_format(self, dt):
+        """ Returns a formatted datetime string to match the expected output style. """
+        return f"datetime.datetime({dt.year}, {dt.month}, {dt.day}, {dt.hour}, {dt.minute}, {dt.second})"
 
     def to_dict(self):
         """Convert instance into dict format"""
@@ -51,9 +55,11 @@ class BaseModel:
         dict_repr = {}
         for key, value in self.__dict__.items():
             if key == '_sa_instance_state':
-                continue
-             
-            dict_repr[key] = value
+                continue 
+            if isinstance(value, datetime):
+                dict_repr[key] = self.datetime_format(value)
+            else:
+                dict_repr[key] = value
         dict_repr['__class__'] = type(self).__name__
         return dict_repr
 
