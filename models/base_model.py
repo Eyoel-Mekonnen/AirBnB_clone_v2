@@ -4,6 +4,7 @@ import uuid
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, Integer, DateTime
+import models
 
 Base = declarative_base()
 
@@ -29,30 +30,38 @@ class BaseModel:
                                                      '%Y-%m-%dT%H:%M:%S.%f')
             del kwargs['__class__']
             self.__dict__.update(kwargs)
+    
+    def date_time_format(self, dt):
+        """Convert to datetiem object"""
+        if dt is None:
+            return None
+        return "datetime.datetime({}, {}, {}, {}, {}, {})".format(dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second)
 
     def __str__(self):
         """Returns a string representation of the instance"""
-        cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
+        cls_name = self.__class__.__name__
+        dictionary = self.to_dict()
+        return f"[{cls_name}] ({self.id}) {dictionary}"
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
         from models import storage
         self.updated_at = datetime.now()
         models.storage.new(self)
-        modles.storage.save()
+        models.storage.save()
 
     def to_dict(self):
         """Convert instance into dict format"""
-        dictionary = {}
-        dictionary.update(self.__dict__)
-        dictionary.update({'__class__':
-                          (str(type(self)).split('.')[-1]).split('\'')[0]})
-        if '_sa_instance_state' in dictionary:
-            del dictionary['_sa_instance_state']
-        dictionary['created_at'] = self.created_at.isoformat()
-        dictionary['updated_at'] = self.updated_at.isoformat()
-        return dictionary
+        class_name = self.__class__.__name__
+        dict_name = {}
+        for key, value in self.__dict__.items():
+            if key == '_sa_instance_state':
+                continue
+            if key == 'created_at' or key == 'updated_at':
+                dict_name[key] = self.date_time_format(value)
+            else:
+                dict_name[key] = value
+        return dict_name
 
     def delete(self):
         """Delete the current instance from the storage"""

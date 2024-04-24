@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
 import json
+from models.state import State
+from models.user import User
+from models.amenity import Amenity
 
 
 class FileStorage:
@@ -12,6 +15,8 @@ class FileStorage:
         """Returns a dictionary of models currently in storage"""
         if cls is None:
             return FileStorage.__objects
+        if isinstance(cls, str):
+            cls = globals()[cls]
         dict_of_objects = {}
         for key, value in FileStorage.__objects.items():
             if isinstance(value, cls):

@@ -134,7 +134,7 @@ class HBNBCommand(cmd.Cmd):
             return
         attribute_name_char = r'(\w+)(?=\=)'
         attribute_value_quote = r'(?<=")(.*?)(?=")'
-        attribute_value_non_quote = r'(?<=\=)([\w.-]+)(?=\s|$)'
+        attribute_value_non_quote = r'(?<=\=)([\w@.-]+)(?=\s|$)'
         for attribute in list_attribute:
             name_matched = re.search(attribute_name_char, attribute)
             if name_matched:
@@ -156,7 +156,6 @@ class HBNBCommand(cmd.Cmd):
                                 attribute_value = attribute_value.\
                                                   replace('_', ' ')
                     setattr(new_obj_in, attribute_name, attribute_value)
-        storage.new(new_obj_in)
         new_obj_in.save()
         print(new_obj_in.id)
 
@@ -232,22 +231,21 @@ class HBNBCommand(cmd.Cmd):
         print("[Usage]: destroy <className> <objectId>\n")
 
     def do_all(self, args):
-        """ Shows all objects, or all objects of a class"""
-        print_list = []
-
-        if args:
-            args = args.split(' ')[0]  # remove possible trailing args
-            if args not in HBNBCommand.classes:
-                print("** class doesn't exist **")
-                return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
-        else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
-
-        print(print_list)
+        """Shows all objects, or all objects of a class"""
+        list_of_classes = ["BaseModel", "User", "State", "City", "Amenity", "Place", "Review"]
+        line = args.strip()
+        list_ = line.split(" ")
+        class_name = list_[0] 
+        if class_name and class_name not in list_of_classes:
+            print("** class doesn't exist **")
+            return
+        objects_ = storage.all(class_name)
+        list_instances = []
+        for value in objects_.values():
+            formatted_str = str(value)  # Use str(value) directly
+            list_instances.append(formatted_str)
+        output_str = ", ".join(list_instances)
+        print("[" + output_str + "]") 
 
     def help_all(self):
         """ Help information for the all command """

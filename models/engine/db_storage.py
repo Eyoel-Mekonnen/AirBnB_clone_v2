@@ -47,6 +47,8 @@ class DBStorage:
             for table in table_instance:
                 key = table.__class__.__name__ + "." + str(table.id)
                 dic_of_tables[key] = table
+            if '_sa_instance_state' in dic_of_tables:
+                del dic_of_tables['_sa_instance']
         return dic_of_tables
 
     def new(self, obj):
