@@ -18,19 +18,37 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
-        if not kwargs:
-            from models import storage
+        if len(kwargs) != 0:
+            time_format = "%Y-%m-%dT%H:%M:%S.%f"
+            for key, value in kwargs.items():
+                if (key == "__class__"):
+                    continue
+                elif (key == "id"):
+                    self.id = value
+                elif (key == "created_at"):
+                    if isinstance(value, str):
+                        date_object = datetime.strptime(value, time_format)
+                        self.created_at = date_object
+                    else:
+                        self.created_at = date_object
+                elif (key == "updated_at"):
+                    if isinstance(value, str):
+                        date_object = datetime.strptime(value, time_format)
+                        self.updated_at = date_object
+                    else:
+                        self.updated_at = value
+            if 'id' not in kwargs:
+                self.id = str(uuid.uuid4())
+            if 'created_at' not in kwargs:
+                self.created_at = datetime.now()
+            if 'updated_at' not in kwargs:
+                self.updated_at = datetime.now()
+        else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-        else:
-            kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            del kwargs['__class__']
-            self.__dict__.update(kwargs)
-    
+
+
     def date_time_format(self, dt):
         """Convert to datetiem object"""
         if dt is None:
@@ -39,8 +57,7 @@ class BaseModel:
 
     def __str__(self):
         """Returns a string representation of the instance"""
-        cls_name = self.__class__.__name__
-        return ("[{}] ({}) {}".format(cls_name, self.id, self.__dict__))
+        return ("[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__))
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
@@ -51,14 +68,9 @@ class BaseModel:
 
     def to_dict(self):
         """Convert instance into dict format"""
-        class_name = self.__class__.__name__
-        dict_name = {"__class__": class_name}
+        dict_name = {}
         for key, value in self.__dict__.items():
-            if key == '_sa_instance_state':
-                continue
-            if key == 'created_at' or key == 'updated_at':
-                dict_name[key] = self.date_time_format(value)
-            else:
+            if (key != '_sa_instance_state'):
                 dict_name[key] = value
         return dict_name
 

@@ -36,20 +36,19 @@ class DBStorage:
         dic_of_tables = {}
         if cls is None:
             for table in tables:
-                table_instances.extend(self.__session.query(table).all())
-            for table in table_instances:
-                key = table.__class__.__name__ + "." + str(table.id)
-                dic_of_tables[key] = table
+                table_instances = self.__session.query(table)
+            for instance in table_instances:
+                key = instance.__class__.__name__ + "." + instance.id
+                dic_of_tables[key] = instance.to_dict()
         else:
             if isinstance(cls, str):
                 cls = globals()[cls]
-            table_instance = self.__session.query(cls).all()
-            for table in table_instance:
-                key = table.__class__.__name__ + "." + str(table.id)
-                dic_of_tables[key] = table
-            if '_sa_instance_state' in dic_of_tables:
-                del dic_of_tables['_sa_instance']
+            table_instance = self.__session.query(cls)
+            for instance in table_instance:
+                key = instance.__class__.__name__ + "." + instance.id
+                dic_of_tables[key] = instance.to_dict()
         return dic_of_tables
+
 
     def new(self, obj):
         """Add the object to current database session."""

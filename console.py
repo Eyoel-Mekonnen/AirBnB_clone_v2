@@ -151,7 +151,7 @@ class HBNBCommand(cmd.Cmd):
                             attribute_value = float(attribute_value)
                         elif type(getattr(new_obj_in, attribute_name)) is int:
                             attribute_value = int(attribute_value)
-                        elif type(getattr(new_obj_in, attribute_name)) is str:
+                        else:
                             attribute_value = attribute_value.replace('_', ' ')
                     setattr(new_obj_in, attribute_name, attribute_value)
         new_obj_in.save()
@@ -239,11 +239,12 @@ class HBNBCommand(cmd.Cmd):
             return
         objects_ = storage.all(class_name)
         list_instances = []
-        for value in objects_.values():
-            formatted_str = str(value)  # Use str(value) directly
+        for key, value in objects_.items():
+            formatted_str = "[[{}] ({}) {}]".format(key.split(".")[0], value['id'], value)
             list_instances.append(formatted_str)
-        output_str = ", ".join(list_instances)
-        print("[" + output_str + "]") 
+        for instance_str in list_instances:
+            print(instance_str,end="")
+        print("")
 
     def help_all(self):
         """ Help information for the all command """

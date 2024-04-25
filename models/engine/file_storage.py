@@ -19,7 +19,7 @@ class FileStorage:
         """Returns a dictionary of models currently in storage"""
         if cls is None:
             return FileStorage.__objects
-        if isinstance(cls, str):
+        if cls is not None and isinstance(cls, str):
             cls = globals()[cls]
         dict_of_objects = {}
         for key, value in FileStorage.__objects.items():
@@ -61,10 +61,13 @@ class FileStorage:
                 json_file = json.loads(f.read())
         except FileNotFoundError:
             pass
-        for key, value in json_file.items():
-            cls_name = value.pop('__class__', None)
-            if cls_name:
-                cls_object = globals().get(cls_name)
-                if cls_object:
-                    obj_creation = cls_object(**value)
-                    self.new(obj_creation)
+        try:
+            for key, value in json_file.items():
+                cls_name = value.pop('__class__', None)
+                if cls_name:
+                    cls_object = globals().get(cls_name)
+                    if cls_object:
+                        obj_creation = cls_object(**value)
+                        self.new(obj_creation)
+        except:
+            pass
