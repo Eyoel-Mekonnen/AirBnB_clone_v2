@@ -134,7 +134,7 @@ class HBNBCommand(cmd.Cmd):
             return
         attribute_name_char = r'(\w+)(?=\=)'
         attribute_value_quote = r'(?<=")(.*?)(?=")'
-        attribute_value_non_quote = r'(?<=\=)([\w@.-]+)(?=\s|$)'
+        attribute_value_non_quote = r'(?<=\=)([\w@._-]+)(?=\s|$)'
         for attribute in list_attribute:
             name_matched = re.search(attribute_name_char, attribute)
             if name_matched:
@@ -148,11 +148,13 @@ class HBNBCommand(cmd.Cmd):
                     attribute_value = value_matched.group(1)
                     if (hasattr(new_obj_in, attribute_name)):
                         if type(getattr(new_obj_in, attribute_name)) is float:
+                            print("I was here")
                             attribute_value = float(attribute_value)
                         elif type(getattr(new_obj_in, attribute_name)) is int:
                             attribute_value = int(attribute_value)
                         else:
                             attribute_value = attribute_value.replace('_', ' ')
+                    print("{} {}".format(attribute_name, attribute_value))
                     setattr(new_obj_in, attribute_name, attribute_value)
         new_obj_in.save()
         print(new_obj_in.id)
@@ -240,11 +242,12 @@ class HBNBCommand(cmd.Cmd):
         objects_ = storage.all(class_name)
         list_instances = []
         for key, value in objects_.items():
-            formatted_str = "[[{}] ({}) {}]".format(key.split(".")[0], value['id'], value)
-            list_instances.append(formatted_str)
-        for instance_str in list_instances:
-            print(instance_str,end="")
-        print("")
+            if (key.split(".")[0] == class_name):
+                formatted_str = "[[{}] ({}) {}]".format(key.split(".")[0], value['id'], value)
+                list_instances.append(formatted_str)
+            for instance_str in list_instances:
+                print(instance_str,end="")
+            print("")
 
     def help_all(self):
         """ Help information for the all command """

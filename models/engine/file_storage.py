@@ -61,6 +61,8 @@ class FileStorage:
                 json_file = json.loads(f.read())
         except FileNotFoundError:
             pass
+        except json.JSONDecodeError as e:
+            print(f"JSON decode error: {e}, initializing empty storage.")
         try:
             for key, value in json_file.items():
                 cls_name = value.pop('__class__', None)

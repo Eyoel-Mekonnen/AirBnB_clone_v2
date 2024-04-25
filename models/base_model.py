@@ -5,6 +5,7 @@ from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, Integer, DateTime
 import models
+from os import getenv
 
 Base = declarative_base()
 
@@ -69,9 +70,14 @@ class BaseModel:
     def to_dict(self):
         """Convert instance into dict format"""
         dict_name = {}
-        for key, value in self.__dict__.items():
+        for key, value in self.__dict__.copy().items():
             if (key != '_sa_instance_state'):
                 dict_name[key] = value
+            if getenv("HBNB_TYPE_STORAGE") != "db":
+                if '_sa_instance_state' in self.__dict__.keys():
+                    del self.__dict__['_sa_instance_state']
+                if isinstance(value, datetime):
+                    dict_name[key] = value.isoformat()
         return dict_name
 
     def delete(self):
