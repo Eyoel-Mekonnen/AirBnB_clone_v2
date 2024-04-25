@@ -134,7 +134,7 @@ class HBNBCommand(cmd.Cmd):
             return
         attribute_name_char = r'(\w+)(?=\=)'
         attribute_value_quote = r'(?<=")(.*?)(?=")'
-        attribute_value_non_quote = r'(?<=\=)([\w@._-]+)(?=\s|$)'
+        attribute_value_non_quote = r'(?<=\=)([\w@._,-]+)(?=\s|$)'
         for attribute in list_attribute:
             name_matched = re.search(attribute_name_char, attribute)
             if name_matched:

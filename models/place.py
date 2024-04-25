@@ -20,9 +20,9 @@ class Place(BaseModel, Base):
     longitude = Column(Float, nullable=True)
     amenity_ids = []
     user_ = relationship("User", back_populates="place_", cascade="delete")
-    reviews = relationship("Review", back_populates="place", cascade="delete")
+    reviews__ = relationship("Review", back_populates="place", cascade="delete")
 
-    @getter
+    @property
     def reviews(self):
         """returns list of reviews usin g filestorage"""
         from models import storage
