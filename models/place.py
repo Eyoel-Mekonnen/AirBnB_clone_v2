@@ -20,4 +20,12 @@ class Place(BaseModel, Base):
     longitude = Column(Float, nullable=True)
     amenity_ids = []
     user_ = relationship("User", back_populates="place_", cascade="delete")
+    reviews = relationship("Review", back_populates="place", cascade="delete")
 
+    @getter
+    def reviews(self):
+        """returns list of reviews usin g filestorage"""
+        from models import storage
+        all_reviews = storage.all(Review)
+        place_reviews = [review for review in all_reviews.values() if review.place_id == self.id]
+        return place_reviews
