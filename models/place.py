@@ -5,6 +5,15 @@ from sqlalchemy import String, Column, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
+place_amenity = Table("place_amenity", Base.metadata,
+                      Column("place_id", String(60),
+                             ForeignKey("places.id"),
+                             primary_key=True,
+                             nullable=False),
+                      Column("amenity_id", String(60),
+                             ForeignKey("amenities.id"),
+                             primary_key=True,
+                             nullable=False))
 class Place(BaseModel, Base):
     """ A place to stay """
     __tablename__ = "places"  
@@ -21,6 +30,7 @@ class Place(BaseModel, Base):
     amenity_ids = []
     user_ = relationship("User", back_populates="place_", cascade="delete")
     reviews__ = relationship("Review", back_populates="place", cascade="delete")
+    amenities = relationship("Amenity", secondary=place_amenity, viewonly=False, back_populates="place_amenities")
 
     @property
     def reviews(self):
@@ -29,3 +39,14 @@ class Place(BaseModel, Base):
         all_reviews = storage.all(Review)
         place_reviews = [review for review in all_reviews.values() if review.place_id == self.id]
         return place_reviews
+
+    @property
+    def amenities(self):
+        """Return list of amenity id"""
+        return self.amenity_ids
+
+    @amenities.setter
+    def amenities(self, obj=None):
+        """Append id to the attribute"""
+        if type(obj) is Amenity and obj.id not in self.amenity_ids:
+            self.amenity_ids.append(obj.id)
