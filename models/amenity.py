@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from models.place import place_amenity
 
-class Amenity(BaseModel):
+class Amenity(BaseModel, Base):
     """Amenity class"""
     __tablename__ = "amenities"
 
