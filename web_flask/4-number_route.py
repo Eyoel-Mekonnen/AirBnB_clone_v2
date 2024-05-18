@@ -12,7 +12,7 @@ def hello():
 
 @app.route("/hbnb", strict_slashes=False)
 def hello_hbnb():
-    return "HBHB"
+    return "HBNHB"
 
 
 @app.route("/c/<text>", strict_slashes=False)
