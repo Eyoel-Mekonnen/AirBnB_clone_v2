@@ -25,7 +25,7 @@ def c_is_fun():
 @app.route("/python/<text>", strict_slashes=False)
 def python_is_cool():
     text = text.replace("_", " ")
-    return f'Pyhton {escape(text)}'
+    return f'Python {escape(text)}'
 
 
 @app.route("/number/<int:n>", strict_slashes=False)
