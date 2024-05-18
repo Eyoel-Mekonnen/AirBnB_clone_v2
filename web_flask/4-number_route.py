@@ -16,14 +16,14 @@ def hello_hbnb():
 
 
 @app.route("/c/<text>", strict_slashes=False)
-def c_is_fun():
+def c_is_fun(text):
     text = text.replace("_", " ")
     return f'C {escape(text)}'
 
 
 @app.route("/python", defaults={'text': 'is_cool'}, strict_slashes=False)
 @app.route("/python/<text>", strict_slashes=False)
-def python_is_cool():
+def python_is_cool(text):
     text = text.replace("_", " ")
     return f'Python {escape(text)}'
 
