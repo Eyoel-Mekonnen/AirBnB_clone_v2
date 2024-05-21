@@ -153,7 +153,7 @@ class HBNBCommand(cmd.Cmd):
                             attribute_value = int(attribute_value)
                         else:
                             attribute_value = attribute_value.replace('_', ' ')
-                            print("{}".format(attribute_value))
+                            
                     setattr(new_obj_in, attribute_name, attribute_value)
         new_obj_in.save()
         print(new_obj_in.id)
