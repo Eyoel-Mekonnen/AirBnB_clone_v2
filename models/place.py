@@ -17,9 +17,10 @@ place_amenity = Table("place_amenity", Base.metadata,
                              primary_key=True,
                              nullable=False))
 
+
 class Place(BaseModel, Base):
     """ A place to stay """
-    __tablename__ = "places"  
+    __tablename__ = "places"
     city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
     user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
     name = Column(String(128), nullable=False)
@@ -31,39 +32,28 @@ class Place(BaseModel, Base):
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
     amenity_ids = []
-    user_ = relationship("User", back_populates="place_", cascade="delete")
-    reviews__ = relationship("Review", back_populates="place", cascade="delete")
-    amenities = relationship("Amenity", secondary=place_amenity, viewonly=False, back_populates="place_amenities")
 
     if getenv("HBNB_TYPE_STORAGE") == "db":
         reviews = relationship("Review", cascade='all, delete, delete-orphan',
                                backref="reviewed_place")
         amenities = relationship("Amenity", secondary=place_amenity,
-                                  viewonly=False,
-                                  back_populates="place_amenities")
+                                 viewonly=False,
+                                 back_populates="place_amenities")
     else:
         @property
         def reviews(self):
             """returns list of reviews usin g filestorage"""
-            var = models.storage.all()
-            lista = []
-            result = []
-            for key in var:
-                review = key.replace('.', ' ')
-                review = shlex.split(review)
-                if (review[0] == 'Review'):
-                    lista.append(var[key])
-                for elem in lista:
-                    if (elem.place_id == self.id):
-                        result.append(elem)
-                return (result)
+            return [review for review in models.storage.all('Review').values()
+                    if review.place_id == self.id]
+
         @property
         def amenities(self):
             """Return list of amenity id"""
-            return self.amenity_ids
+            return [models.storage.get('Amenity', id)
+                    for id in self.amenity_ids]
 
         @amenities.setter
-        def amenities(self, obj=None):
+        def amenities(self, obj):
             """Append id to the attribute"""
-            if type(obj) is Amenity and obj.id not in self.amenity_ids:
+            if isinstance(obj, Amenity) and obj.id not in self.amenity_ids:
                 self.amenity_ids.append(obj.id)
