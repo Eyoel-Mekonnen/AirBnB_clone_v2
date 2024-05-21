@@ -148,13 +148,12 @@ class HBNBCommand(cmd.Cmd):
                     attribute_value = value_matched.group(1)
                     if (hasattr(new_obj_in, attribute_name)):
                         if type(getattr(new_obj_in, attribute_name)) is float:
-                            print("I was here")
                             attribute_value = float(attribute_value)
                         elif type(getattr(new_obj_in, attribute_name)) is int:
                             attribute_value = int(attribute_value)
                         else:
                             attribute_value = attribute_value.replace('_', ' ')
-                    print("{} {}".format(attribute_name, attribute_value))
+                            print("{}".format(attribute_value))
                     setattr(new_obj_in, attribute_name, attribute_value)
         new_obj_in.save()
         print(new_obj_in.id)
