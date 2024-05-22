@@ -46,7 +46,7 @@ class DBStorage:
             table_instance = self.__session.query(cls)
             for instance in table_instance:
                 key = instance.__class__.__name__ + "." + instance.id
-                dic_of_tables[key] = instance.to_dict()
+                dic_of_tables[key] = instance
         return dic_of_tables
 
 
