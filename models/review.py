@@ -4,6 +4,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import String, Integer, Float, ForeignKey, Column
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+import models
 
 class Review(BaseModel, Base):
     """ Review classto store review information """

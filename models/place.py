@@ -4,6 +4,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import String, Column, Integer, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 import os
+import models
 
 place_amenity = Table("place_amenity", Base.metadata,
                       Column("place_id", String(60),
@@ -33,12 +34,12 @@ class Place(BaseModel, Base):
     user = relationship("User", back_populates="place", cascade="delete")
 
     if os.getenv("HBNB_TYPE_STORAGE") == "db":
-        reviews = relationship("Review", cascade="all, delete-orphan",
-                               back_populates="place")
+        reviews = relationship("Review", back_populates="place", cascade="delete")
         amenities = relationship("Amenity", secondary=place_amenity,
                                  viewonly=False,
                                  back_populates="place_amenities")
     else:
+        reviews = relationship("Review", back_populates="place", cascade="delete")
         @property
         def reviews(self):
             """returns list of reviews usin g filestorage"""
