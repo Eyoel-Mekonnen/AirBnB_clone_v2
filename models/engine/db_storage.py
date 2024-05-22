@@ -37,9 +37,9 @@ class DBStorage:
         if cls is None:
             for table in tables:
                 table_instances = self.__session.query(table)
-                for instance in table_instances:
-                    key = instance.__class__.__name__ + "." + instance.id
-                    dic_of_tables[key] = instance.to_dict()
+            for instance in table_instances:
+                key = instance.__class__.__name__ + "." + instance.id
+                dic_of_tables[key] = instance
         else:
             if isinstance(cls, str):
                 cls = globals()[cls]
