@@ -34,12 +34,11 @@ class Place(BaseModel, Base):
     user = relationship("User", back_populates="place", cascade="delete")
 
     if os.getenv("HBNB_TYPE_STORAGE") == "db":
-        reviews = relationship("Review", back_populates="place", cascade="delete")
+        reviews = relationship("Review", cascade='all, delete, delete-orphan', backref="place")
         amenities = relationship("Amenity", secondary=place_amenity,
                                  viewonly=False,
                                  back_populates="place_amenities")
     else:
-        reviews = relationship("Review", back_populates="place", cascade="delete")
         @property
         def reviews(self):
             """returns list of reviews usin g filestorage"""
