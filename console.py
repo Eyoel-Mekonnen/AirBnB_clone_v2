@@ -242,7 +242,10 @@ class HBNBCommand(cmd.Cmd):
         list_instances = []
         for key, value in objects_.items():
             if (key.split(".")[0] == class_name):
-                formatted_str = "[[{}] ({}) {}]".format(key.split(".")[0], value['id'], value)
+                if isinstance(value, dict):
+                    formatted_str = "[[{}] ({}) {}]".format(key.split(".")[0], value['id'], value)
+                else:
+                    formatted_str = "[[{}] ({}) {}]".format(key.split(".")[0], value.id, value)
                 list_instances.append(formatted_str)
             for instance_str in list_instances:
                 print(instance_str,end="")
