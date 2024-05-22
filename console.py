@@ -239,18 +239,23 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         objects_ = storage.all(class_name)
+        #print("Am here")
+        #print("Objects retrieved:", objects_)
         list_instances = []
         for key, value in objects_.items():
+            #print("Tyring to split")
             if (key.split(".")[0] == class_name):
                 if isinstance(value, dict):
+                    #print("am a dictionary")
                     formatted_str = "[[{}] ({}) {}]".format(key.split(".")[0], value['id'], value)
                 else:
+                    #print("am SQL object")
                     formatted_str = "[[{}] ({}) {}]".format(key.split(".")[0], value.id, value)
                 list_instances.append(formatted_str)
             for instance_str in list_instances:
                 print(instance_str,end="")
             print("")
-
+        #print("Am not Both")
     def help_all(self):
         """ Help information for the all command """
         print("Shows all objects, or all of a class")
