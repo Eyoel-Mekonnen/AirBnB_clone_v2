@@ -5,6 +5,9 @@ from models import *
 
 # creation of a State
 state = State(name="California")
+print(f"State created with name: {state.name}")
+if state.name is None:
+    raise ValueError("State name cannot be None")
 state.save()
 
 # creation of a City

@@ -7,6 +7,7 @@ from sqlalchemy import Column, String, Integer, DateTime
 import models
 from os import getenv
 
+
 Base = declarative_base()
 
 
@@ -24,6 +25,8 @@ class BaseModel:
             for key, value in kwargs.items():
                 if (key == "__class__"):
                     continue
+                setattr(self, key, value)
+                """
                 elif (key == "id"):
                     self.id = value
                 elif (key == "created_at"):
@@ -38,6 +41,7 @@ class BaseModel:
                         self.updated_at = date_object
                     else:
                         self.updated_at = value
+                    """
             if 'id' not in kwargs:
                 self.id = str(uuid.uuid4())
             if 'created_at' not in kwargs:
@@ -49,16 +53,17 @@ class BaseModel:
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
 
-
     def date_time_format(self, dt):
         """Convert to datetiem object"""
         if dt is None:
             return None
+
         return "datetime.datetime({}, {}, {}, {}, {}, {})".format(dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second)
 
     def __str__(self):
         """Returns a string representation of the instance"""
-        return ("[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__))
+        return ("[{}] ({}) {}".format(self.__class__.__name__,
+                                      self.id, self.__dict__))
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
