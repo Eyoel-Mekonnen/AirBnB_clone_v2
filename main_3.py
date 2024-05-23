@@ -49,12 +49,17 @@ my_console.use_rawinput = False
  Exec command
 """
 def exec_command(my_console, the_command, last_lines = 1):
+    print(f"Executing command: {the_command}")
     my_console.stdout = io.StringIO()
     real_stdout = sys.stdout
     sys.stdout = my_console.stdout
     my_console.onecmd(the_command)
     sys.stdout = real_stdout
+    output = my_console.stdout.getvalue()
+    print("Command output:", output)
     lines = my_console.stdout.getvalue().split("\n")
+    result = "\n".join(lines[-(last_lines+1):-1])
+    print("Result of command:", result)
     return "\n".join(lines[(-1*(last_lines+1)):-1])
 
 

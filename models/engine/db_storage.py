@@ -10,7 +10,9 @@ from models.user import User
 from models.place import Place
 from models.review import Review
 from models.amenity import Amenity
-from sqlalchemy.orm import sessionmaker, scoped_session, relationship
+from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import (create_engine)
 
 
 class DBStorage:
@@ -69,3 +71,10 @@ class DBStorage:
         Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
         self.__session = scoped_session(Session)
         print("Database session reloaded.")
+
+    def close(self):
+        """Close the current SQLAlchemy session."""
+        self.__session.remove()
+        if self.__engine:
+            self.__engine.dispose()
+

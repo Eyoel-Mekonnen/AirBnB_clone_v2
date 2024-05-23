@@ -186,6 +186,7 @@ class HBNBCommand(cmd.Cmd):
             return
 
         key = c_name + "." + c_id
+        storage_ = storage.all(c_name)
         try:
             print(storage._FileStorage__objects[key])
         except KeyError:
@@ -242,7 +243,9 @@ class HBNBCommand(cmd.Cmd):
         list_instances = []
         for key, value in objects_.items():
             if (key.split(".")[0] == class_name):
-                formatted_str = "[[{}] ({}) {}]".format(key.split(".")[0], value['id'], value)
+                value = value.to_dict()
+                if isinstance(value, dict):
+                    formatted_str = "[[{}] ({}) {}]".format(key.split(".")[0], value['id'], value)
                 list_instances.append(formatted_str)
             for instance_str in list_instances:
                 print(instance_str,end="")
@@ -352,7 +355,5 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
-
-
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
