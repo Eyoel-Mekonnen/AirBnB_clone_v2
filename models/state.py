@@ -16,7 +16,7 @@ class State(BaseModel, Base):
     @property
     def cities(self):
         """Return list of city where state_id current state_id"""
-        dict_objects = models.storage.all(City)
+        dict_objects = storage.all(City)
         list_city = []
         for key, value in dict_objects.items():
             if self.id == value.state_id:
