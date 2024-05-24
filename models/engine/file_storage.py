@@ -17,28 +17,34 @@ class FileStorage:
 
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage"""
-        if cls is None:
-            return FileStorage.__objects
-        if cls is not None and isinstance(cls, str):
-            cls = globals()[cls]
+        #print("I am here first")
         dict_of_objects = {}
-        for key, value in FileStorage.__objects.items():
-            if isinstance(value, cls):
+        if cls is None:
+            #print("I am none")
+            for key, value in FileStorage.__objects.items():
                 dict_of_objects[key] = value
+        elif cls is not None and isinstance(cls, str):
+            cls = globals().get(cls)
+            if cls:
+                for key, value in FileStorage.__objects.items():
+                    if isinstance(value, cls):
+                        dict_of_objects[key] = value
+        #print("dict_of_objects:", dict_of_objects)
         return dict_of_objects
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
         object_id = obj.__class__.__name__ + "." + getattr(obj, "id")
         FileStorage.__objects[object_id] = obj
+        #print(obj)
 
     def save(self):
         """Saves storage dictionary to file"""
         json_dict = {}
         for key, value in FileStorage.__objects.items():
             json_dict[key] = value.to_dict()
-            with open(FileStorage.__file_path, 'w', encoding="utf-8") as f:
-                 f.write(json.dumps(json_dict))
+        with open(FileStorage.__file_path, 'w', encoding="utf-8") as f:
+            f.write(json.dumps(json_dict))
     
 
     def delete(self, obj=None):
@@ -51,7 +57,6 @@ class FileStorage:
             self.save()
 
 
-
     def reload(self):
         """Loads storage dictionary from file"""
 
@@ -59,17 +64,29 @@ class FileStorage:
         try:
             with open(FileStorage.__file_path, 'r', encoding="utf-8") as f:
                 json_file = json.loads(f.read())
+            #print("Loaded data:", json_file)
         except FileNotFoundError:
             pass
         except json.JSONDecodeError as e:
             print(f"JSON decode error: {e}, initializing empty storage.")
         try:
             for key, value in json_file.items():
-                cls_name = value.pop('__class__', None)
-                if cls_name:
-                    cls_object = globals().get(cls_name)
-                    if cls_object:
-                        obj_creation = cls_object(**value)
-                        self.new(obj_creation)
+                #print("Am here")
+                cls_name = key.split(".")[0]
+                #print(cls_name)
+                #print("trying to print class name")
+                cls_object = globals().get(cls_name)
+                value.pop('__class__', None)
+                #if cls_object:
+                #print(cls_object)
+                obj_creation = cls_object(**value)
+                #print("I am a New Object Created")
+                self.new(obj_creation)
+                #print("I am reloaded")
+                #print("Obj_creation {}".format(obj_creation))
         except:
             pass
+
+    def close(self):
+        """Calls reload method to desrialize objects"""
+        self.reload()

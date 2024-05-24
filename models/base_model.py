@@ -25,23 +25,21 @@ class BaseModel:
             for key, value in kwargs.items():
                 if (key == "__class__"):
                     continue
-                setattr(self, key, value)
-                """
-                elif (key == "id"):
-                    self.id = value
                 elif (key == "created_at"):
                     if isinstance(value, str):
                         date_object = datetime.strptime(value, time_format)
-                        self.created_at = date_object
+                        setattr(self, key, date_object)
                     else:
-                        self.created_at = date_object
+                        setattr(self, key, value)
                 elif (key == "updated_at"):
                     if isinstance(value, str):
                         date_object = datetime.strptime(value, time_format)
-                        self.updated_at = date_object
+                        setattr(self, key, date_object)
                     else:
-                        self.updated_at = value
-                    """
+                        setattr(self, key, value)
+                else:
+                    setattr(self, key, value)
+
             if 'id' not in kwargs:
                 self.id = str(uuid.uuid4())
             if 'created_at' not in kwargs:
@@ -68,9 +66,12 @@ class BaseModel:
     def save(self):
         """Updates updated_at with current time when instance is changed"""
         from models import storage
+        #print("I am at save in basemodel")
         self.updated_at = datetime.now()
         models.storage.new(self)
+        #print("I ma saved as new")
         models.storage.save()
+        #print("I am finally saved")
 
     def to_dict(self):
         """Convert instance into dict format"""
