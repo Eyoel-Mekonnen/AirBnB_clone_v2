@@ -3,19 +3,18 @@
 
 from flask import Flask, render_template
 from markupsafe import escape
+from models import storage
+
 
 app = Flask(__name__)
 
 @app.route("/states_list", strict_slashes=False)
 def states():
-    from models import storage
-    from models.state import State
     states = storage.all("State")
     return (render_template("7-states_list.html", states=states))
     
 @app.teardown_appcontext
-def close_connection(error):
-    from models import storage
+def close_connection(exc):
     storage.close()
 
 if __name__ == "__main__":
