@@ -6,17 +6,19 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import String, Column, Integer
 from models.city import City
 from sqlalchemy.ext.declarative import declarative_base
+import models
+
 
 class State(BaseModel, Base):
     """ State class """
-    __tablename__ = 'states'
+    __tablename__ = "states"
     name = Column(String(128), nullable=False)
     cities_ = relationship("City", back_populates="state", cascade="delete, delete-orphan")
 
     @property
     def cities(self):
         """Return list of city where state_id current state_id"""
-        dict_objects = storage.all(City)
+        dict_objects = models.storage.all(City)
         list_city = []
         for key, value in dict_objects.items():
             if self.id == value.state_id:

@@ -39,7 +39,6 @@ class BaseModel:
                         setattr(self, key, value)
                 else:
                     setattr(self, key, value)
-
             if 'id' not in kwargs:
                 self.id = str(uuid.uuid4())
             if 'created_at' not in kwargs:
