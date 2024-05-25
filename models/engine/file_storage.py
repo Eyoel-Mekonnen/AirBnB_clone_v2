@@ -20,18 +20,20 @@ class FileStorage:
         list_of_classes = ["Amenity", "State",
                            "User", "Place", "Review", "City"]
         dict_of_objects = {}
+        print("I was here")
         if cls is None:
             for key, value in FileStorage.__objects.items():
                 dict_of_objects[key] = value
         else:
             if isinstance(cls, str) and cls in list_of_classes:
+                print("I am here")
                 cls = globals().get(cls)
             else:
                 pass
-                if cls:
-                    for key, value in FileStorage.__objects.items():
-                        if isinstance(value, cls):
-                            dict_of_objects[key] = value
+            if cls:
+                for key, value in FileStorage.__objects.items():
+                    if isinstance(value, cls):
+                        dict_of_objects[key] = value
         return dict_of_objects
 
     def new(self, obj):

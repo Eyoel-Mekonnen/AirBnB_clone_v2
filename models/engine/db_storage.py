@@ -45,10 +45,12 @@ class DBStorage:
         else:
             if isinstance(cls, str):
                 cls = globals()[cls]
+                #print(cls)
             table_instance = self.__session.query(cls).all()
             for instance in table_instance:
                 key = instance.__class__.__name__ + "." + instance.id
                 dic_of_tables[key] = instance
+        print(dic_of_tables)
         return dic_of_tables
 
     def new(self, obj):
