@@ -24,13 +24,19 @@ class FileStorage:
             #print("I am none")
             for key, value in FileStorage.__objects.items():
                 dict_of_objects[key] = value
-        elif cls in list_of_classes:
-            cls = globals().get(cls)
+        else: 
+            if isinstance(cls, str) and cls in list_of_classes:
+                #print("Cls name here")
+                #print("I am not none")
+                cls = globals().get(cls)
+            else:
+                #print("I am not an object")
+                pass
             #print("{} I was here".format(cls))
-            if cls:
-                for key, value in FileStorage.__objects.items():
-                    if isinstance(value, cls):
-                        dict_of_objects[key] = value
+                if cls:
+                    for key, value in FileStorage.__objects.items():
+                        if isinstance(value, cls):
+                            dict_of_objects[key] = value
         #print("dict_of_objects:", dict_of_objects)
         #print(dict_of_objects)
         return dict_of_objects
