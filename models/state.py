@@ -9,12 +9,13 @@ from sqlalchemy.ext.declarative import declarative_base
 import models
 import shlex
 
+
 class State(BaseModel, Base):
     """ State class """
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
-    cities = relationship("City", backref="state", cascade="all, delete-orphan")
-
+    cities = relationship("City", backref="state",
+                          cascade="all, delete-orphan")
 
     @property
     def cities(self):
@@ -22,4 +23,5 @@ class State(BaseModel, Base):
         from models import storage
         from models.city import City
         all_cities = models.storage.all(City)
-        return [city for city in storage.all(City).values() if city.state_id == self.id]
+        return [city for city in storage.all(City).values()
+                if city.state_id == self.id]

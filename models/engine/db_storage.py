@@ -51,7 +51,6 @@ class DBStorage:
                 dic_of_tables[key] = instance
         return dic_of_tables
 
-
     def new(self, obj):
         """Add the object to current database session."""
         self.__session.add(obj)
@@ -75,4 +74,3 @@ class DBStorage:
     def close(self):
         """Close the current SQLAlchemy session."""
         self.__session.close()
-
