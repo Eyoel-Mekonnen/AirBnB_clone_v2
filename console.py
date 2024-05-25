@@ -239,13 +239,12 @@ class HBNBCommand(cmd.Cmd):
         if class_name and class_name not in list_of_classes:
             print("** class doesn't exist **")
             return
-        if class_name == "":
-            class_name = None
         objects_ = storage.all(class_name)
         list_instances = []
         for key, value in objects_.items():
             if (key.split(".")[0] == class_name):
-                value = value.to_dict()
+                if not (isinstance(value, dict)):
+                    value = value.to_dict()
                 if isinstance(value, dict):
                     formatted_str = "[[{}] ({}) {}]".format(key.split(".")[0], value['id'], value)
                 list_instances.append(formatted_str)

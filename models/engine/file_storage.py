@@ -23,14 +23,14 @@ class FileStorage:
         if cls is None:
             #print("I am none")
             for key, value in FileStorage.__objects.items():
-                dict_of_objects[key] = value
+                dict_of_objects[key] = value.to_dict()
         elif cls in list_of_classes:
             cls = globals().get(cls)
             #print("{} I was here".format(cls))
             if cls:
                 for key, value in FileStorage.__objects.items():
                     if isinstance(value, cls):
-                        dict_of_objects[key] = value
+                        dict_of_objects[key] = value.to_dict()
         #print("dict_of_objects:", dict_of_objects)
         #print(dict_of_objects)
         return dict_of_objects

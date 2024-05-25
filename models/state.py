@@ -7,20 +7,18 @@ from sqlalchemy import String, Column, Integer
 from models.city import City
 from sqlalchemy.ext.declarative import declarative_base
 import models
-
+import shlex
 
 class State(BaseModel, Base):
     """ State class """
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
-    cities_ = relationship("City", back_populates="state", cascade="delete, delete-orphan")
+    cities = relationship("City", back_populates="state", cascade="all, delete, delete-orphan")
+
 
     @property
     def cities(self):
         """Return list of city where state_id current state_id"""
-        dict_objects = models.storage.all(City)
-        list_city = []
-        for key, value in dict_objects.items():
-            if self.id == value.state_id:
-                list_city.append(value)
-        return list_city
+        from models import storage
+        all_cities = models.storage.all(State)
+        return [city for city in all_cities.values() if city.state_id == self.id]
