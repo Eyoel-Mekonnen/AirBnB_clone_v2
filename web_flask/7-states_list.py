@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+""Fetches from db and renders"""
+
 from flask import Flask, render_template
 from markupsafe import escape
 
