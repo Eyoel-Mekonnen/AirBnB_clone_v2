@@ -243,8 +243,7 @@ class HBNBCommand(cmd.Cmd):
         list_instances = []
         for key, value in objects_.items():
             if (key.split(".")[0] == class_name):
-                if not (isinstance(value, dict)):
-                    value = value.to_dict()
+                value = value.to_dict()
                 if isinstance(value, dict):
                     formatted_str = "[[{}] ({}) {}]".format(key.split(".")[0], value['id'], value)
                 list_instances.append(formatted_str)
