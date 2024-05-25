@@ -239,6 +239,8 @@ class HBNBCommand(cmd.Cmd):
         if class_name and class_name not in list_of_classes:
             print("** class doesn't exist **")
             return
+        if class_name == "":
+            class_name = None
         objects_ = storage.all(class_name)
         list_instances = []
         for key, value in objects_.items():

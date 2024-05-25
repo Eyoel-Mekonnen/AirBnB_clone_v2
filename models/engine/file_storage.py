@@ -18,18 +18,21 @@ class FileStorage:
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage"""
         #print("I am here first")
+        list_of_classes = ["Amenity", "State", "User", "Place", "Review", "City"]
         dict_of_objects = {}
         if cls is None:
             #print("I am none")
             for key, value in FileStorage.__objects.items():
                 dict_of_objects[key] = value
-        elif cls is not None and isinstance(cls, str):
+        elif cls in list_of_classes:
             cls = globals().get(cls)
+            #print("{} I was here".format(cls))
             if cls:
                 for key, value in FileStorage.__objects.items():
                     if isinstance(value, cls):
                         dict_of_objects[key] = value
         #print("dict_of_objects:", dict_of_objects)
+        #print(dict_of_objects)
         return dict_of_objects
 
     def new(self, obj):
