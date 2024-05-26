@@ -11,7 +11,11 @@ app = Flask(__name__)
 
 @app.route("/states_list", strict_slashes=False)
 def states():
-    states = storage.all("State")
+    all_states = storage.all("State")
+    states = {}
+    for key, value in all_states.items():
+        if key is not None and getattr(value, 'name', None) is not None:
+            states[key] = value
     return (render_template("7-states_list.html", states=states))
 
 

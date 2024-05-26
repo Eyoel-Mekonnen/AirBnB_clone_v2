@@ -20,7 +20,7 @@ class FileStorage:
         list_of_classes = ["Amenity", "State",
                            "User", "Place", "Review", "City"]
         dict_of_objects = {}
-        print("I was here")
+        #print("I was here")
         if cls is None:
             for key, value in FileStorage.__objects.items():
                 dict_of_objects[key] = value
