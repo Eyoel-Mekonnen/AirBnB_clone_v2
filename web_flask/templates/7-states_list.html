@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>HBNB</title>
-    </head>
-    <body>
-        <h1>States</h1>
-        <ul>
+<HTML lang="en">
+    <HEAD>
+        <TITLE>HBNB</TITLE>
+    </HEAD>
+    <BODY>
+        <H1>States</H1>
+        <UL>
             {%- for state in states.values()|sort(attribute="name") -%}
 	    {% if state and state.name %}
-            <li>{{ state.id }}: <b>{{ state.name }}</b></li>
+            <LI>{{ state.id }}: <B>{{ state.name }}</B></LI>
 	    {% endif %}
             {%- endfor %}
-        </ul>
-    </body>
-</html>
+        </UL>
+    </BODY>
+</HTML>
