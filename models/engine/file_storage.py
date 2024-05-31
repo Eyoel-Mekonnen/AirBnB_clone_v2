@@ -26,7 +26,6 @@ class FileStorage:
                 dict_of_objects[key] = value
         else:
             if isinstance(cls, str) and cls in list_of_classes:
-                print("I am here")
                 cls = globals().get(cls)
             else:
                 pass
