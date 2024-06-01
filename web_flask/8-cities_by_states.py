@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """Start a Flask application and retrieve city and state"""
 from flask import Flask, render_template
-from markupsafe import escape
 from models import storage
 
 app = Flask(__name__)
@@ -22,4 +21,4 @@ def tear_down(exec):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
+    app.run(host="0.0.0.0", debug=True)
